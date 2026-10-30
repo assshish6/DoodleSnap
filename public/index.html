@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DoodleSnap - Multiplayer Drawing Game</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+<div class="container">
+
+    <div class="top-nav">
+        <div id="userProfileBadge" class="user-badge hidden">
+            <span>👤 <strong id="profileDisplayName">Player</strong> <span id="profileUserTag" class="tag-badge">#0000</span></span>
+            <button id="logoutBtn" class="ghost-small">Logout</button>
+        </div>
+        <div class="nav-audio-controls">
+            <button id="musicToggleBtn" class="icon-toggle-btn" aria-label="Toggle Background Music" title="Toggle Background Music">🎵 Music: OFF</button>
+            <button id="soundToggleBtn" class="icon-toggle-btn" aria-label="Toggle Sound Effects" title="Toggle Sound Effects">🔊 SFX: ON</button>
+        </div>
+    </div>
+
+    <h1>🎨 DoodleSnap</h1>
+    <p class="subtitle">Draw, Guess & Have Fun!</p>
+
+    <!-- AUTHENTICATION SCREEN (LOGIN / REGISTER) -->
+    <section id="authScreen" class="card">
+        <div class="auth-tabs">
+            <button id="tabLoginBtn" class="tab-btn active">Login</button>
+            <button id="tabRegisterBtn" class="tab-btn">Register New Account</button>
+        </div>
+
+        <form id="authForm" class="auth-form">
+            <label for="authUsername">Username</label>
+            <input type="text" id="authUsername" placeholder="Enter username (3-15 chars)" maxlength="15" required autocomplete="username">
+
+            <label for="authPassword">Password</label>
+            <input type="password" id="authPassword" placeholder="Enter password" required autocomplete="current-password">
+
+            <button type="submit" id="authSubmitBtn" class="primary full-width">Login</button>
+            <p id="authMessage" class="auth-status"></p>
+        </form>
+    </section>
+
+    <!-- HOME / LOBBY SCREEN -->
+    <section id="homeScreen" class="card hidden">
+        <h2>Join or Create Room</h2>
+
+        <button id="publicBtn">🌍 Find a Game (Matchmaking)</button>
+
+        <p class="divider">or play with friends</p>
+
+        <button id="privateBtn">🔒 Create Private Room</button>
+
+        <div class="code-row">
+            <label for="roomCodeInput" class="sr-only">Room code</label>
+            <input
+                type="text"
+                id="roomCodeInput"
+                placeholder="CODE"
+                maxlength="5"
+                autocomplete="off"
+            >
+            <button id="joinBtn" class="secondary">Join</button>
+        </div>
+
+        <p id="message" role="status">Welcome to DoodleSnap!</p>
+
+        <!-- PERMANENT FRIENDS LIST -->
+        <div class="friends-box">
+            <div class="friends-header">
+                <h3>👥 Permanent Friends (<span id="onlineFriendsCount">0</span> Online)</h3>
+                <form id="addFriendForm" class="add-friend-form">
+                    <input type="text" id="manualFriendInput" placeholder="Enter Friend Tag (e.g. Ashish#A8F2)" maxlength="25" required>
+                    <button type="submit" class="secondary small-btn">+ Add</button>
+                </form>
+            </div>
+            <ul id="savedFriendsList" class="saved-friends-list">
+                <li class="empty-notice">No friends added yet. Add friends using their unique Tag!</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- GAME SCREEN -->
+    <section id="gameScreen" class="card hidden">
+
+        <div class="game-header">
+            <div>
+                <h2>Game Room</h2>
+                <span id="gameProgressBadge" class="game-badge">Match 1/3</span>
+            </div>
+            <div class="game-header-actions">
+                <button id="copyInviteBtn" class="ghost">📋 Copy Room Code</button>
+                <button id="leaveBtn" class="ghost">Leave Game</button>
+            </div>
+        </div>
+
+        <p id="roomInfo">Waiting for players...</p>
+
+        <div id="roundInfo">
+            <p id="roundLabel">Match 1/3 — Round 1/3</p>
+            <p id="roleInfo">Waiting for players...</p>
+            <h3 id="wordInfo"></h3>
+            <p id="timerInfo">Time: 60</p>
+        </div>
+
+        <div id="gameOverPanel" class="game-over hidden" role="alert">
+            <h3 id="gameOverTitle">Game Over!</h3>
+            <p id="gameOverText"></p>
+            <button id="backHomeBtn">Back to Lobby</button>
+        </div>
+
+        <div class="game-layout">
+
+            <div class="drawing-area">
+                <div class="toolbar">
+                    <div class="tool-group">
+                        <button type="button" id="toolBrushBtn" class="tool-btn active" title="Brush">🖌️ Brush</button>
+                        <button type="button" id="toolFillBtn" class="tool-btn" title="Fill Bucket">🪣 Fill</button>
+                        <button type="button" id="eraserBtn" class="tool-btn" aria-pressed="false" title="Eraser">🧽 Eraser</button>
+                    </div>
+
+                    <div class="tool-group">
+                        <label for="brushTypeSelect">Style:</label>
+                        <select id="brushTypeSelect" class="tool-select">
+                            <option value="round">🖌️ Smooth Pen</option>
+                            <option value="crayon">🖍️ Crayon</option>
+                            <option value="calligraphy">🖊️ Calligraphy</option>
+                        </select>
+                    </div>
+
+                    <div class="tool-group">
+                        <label for="brushSize">Size:</label>
+                        <input type="range" id="brushSize" min="2" max="30" value="6">
+                    </div>
+
+                    <div class="tool-group color-group">
+                        <input type="color" id="brushColor" value="#000000" title="Custom Color Picker">
+                        <div class="color-swatches" id="colorSwatches">
+                            <button type="button" class="swatch active" data-color="#000000" style="background:#000000;"></button>
+                            <button type="button" class="swatch" data-color="#ffffff" style="background:#ffffff;"></button>
+                            <button type="button" class="swatch" data-color="#ef4444" style="background:#ef4444;"></button>
+                            <button type="button" class="swatch" data-color="#3b82f6" style="background:#3b82f6;"></button>
+                            <button type="button" class="swatch" data-color="#22c55e" style="background:#22c55e;"></button>
+                            <button type="button" class="swatch" data-color="#eab308" style="background:#eab308;"></button>
+                            <button type="button" class="swatch" data-color="#f97316" style="background:#f97316;"></button>
+                            <button type="button" class="swatch" data-color="#a855f7" style="background:#a855f7;"></button>
+                            <button type="button" class="swatch" data-color="#78350f" style="background:#78350f;"></button>
+                            <button type="button" class="swatch" data-color="#06b6d4" style="background:#06b6d4;"></button>
+                        </div>
+                    </div>
+
+                    <button type="button" id="clearCanvas" class="ghost-btn">🗑️ Clear</button>
+                </div>
+
+                <canvas
+                    id="drawingCanvas"
+                    width="700"
+                    height="450"
+                    aria-label="Drawing canvas"
+                    role="img"
+                >Your browser does not support canvas.</canvas>
+            </div>
+
+            <div class="players-panel">
+                <h3>Players (<span id="playerCount">0</span>/8)</h3>
+                <ul id="playerList"></ul>
+            </div>
+
+            <div class="chat-panel">
+                <h3>💬 Game Chat</h3>
+
+                <div id="chatMessages" class="chat-messages" aria-live="polite">
+                    <p class="chat-system-message">Welcome to DoodleSnap chat!</p>
+                </div>
+
+                <form id="chatForm" class="chat-form">
+                    <button
+                        type="button"
+                        id="emojiButton"
+                        class="emoji-button"
+                        aria-label="Add emoji"
+                        title="Add emoji"
+                    >😊</button>
+
+                    <input
+                        type="text"
+                        id="chatInput"
+                        placeholder="Type your guess here..."
+                        maxlength="200"
+                        autocomplete="off"
+                        aria-label="Chat message"
+                    >
+
+                    <button type="submit" id="chatSendButton">Send</button>
+                </form>
+
+                <div id="emojiPicker" class="emoji-picker hidden">
+                    <button type="button" class="emoji-option">😀</button>
+                    <button type="button" class="emoji-option">😂</button>
+                    <button type="button" class="emoji-option">😍</button>
+                    <button type="button" class="emoji-option">😎</button>
+                    <button type="button" class="emoji-option">🎨</button>
+                    <button type="button" class="emoji-option">🎉</button>
+                    <button type="button" class="emoji-option">❤️</button>
+                    <button type="button" class="emoji-option">🔥</button>
+                    <button type="button" class="emoji-option">👏</button>
+                    <button type="button" class="emoji-option">🤔</button>
+                </div>
+            </div>
+
+        </div>
+
+    </section>
+
+</div>
+
+<!-- INCOMING INVITE MODAL POPUP -->
+<div id="inviteModal" class="invite-modal hidden" role="dialog" aria-modal="true">
+    <div class="invite-modal-card">
+        <h3>✉️ Game Invite</h3>
+        <p><strong id="inviterName">A friend</strong> has invited you to play DoodleSnap!</p>
+        <p class="room-code-tag">Room: <span id="inviteRoomCode">ABCDE</span></p>
+        <div class="invite-modal-buttons">
+            <button id="acceptInviteBtn" class="primary">Accept & Join</button>
+            <button id="declineInviteBtn" class="ghost">Decline</button>
+        </div>
+    </div>
+</div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="script.js"></script>
+
+</body>
+</html>

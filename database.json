@@ -1,0 +1,26 @@
+{
+  "users": {
+    "assshish6#w4mz": {
+      "username": "assshish6",
+      "userTag": "assshish6#W4MZ",
+      "password": "ashish2008",
+      "friends": [
+        "ashish14#V5VX"
+      ]
+    },
+    "ashish14#v5vx": {
+      "username": "ashish14",
+      "userTag": "ashish14#V5VX",
+      "password": "ashish1423",
+      "friends": []
+    },
+    "ashish2008#x4q3": {
+      "username": "ashish2008",
+      "userTag": "ashish2008#X4Q3",
+      "password": "Ashish2008",
+      "friends": [
+        "assshish6#W4MZ"
+      ]
+    }
+  }
+}
