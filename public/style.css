@@ -946,3 +946,69 @@ h1 {
         max-width: 100px;
     }
 }
+/* ========================================
+   AESTHETIC FOOTER STYLING
+   ======================================== */
+.site-footer {
+    margin-top: 35px;
+    padding: 22px 15px;
+    border-top: 1px solid var(--border);
+    background: rgba(12, 10, 30, 0.6);
+    border-radius: 16px;
+    backdrop-filter: blur(8px);
+    text-align: center;
+}
+
+.footer-content {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    font-size: 13px;
+    color: var(--muted);
+}
+
+.footer-content .copyright strong {
+    color: var(--cyan);
+}
+
+.footer-links {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.social-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--pink);
+    text-decoration: none;
+    font-weight: 600;
+    padding: 6px 12px;
+    border-radius: 20px;
+    background: rgba(255, 107, 203, 0.1);
+    border: 1px solid rgba(255, 107, 203, 0.25);
+    transition: all 0.2s ease;
+}
+
+.social-link:hover {
+    background: var(--pink);
+    color: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(255, 107, 203, 0.35);
+}
+
+.footer-content .credits span {
+    color: var(--accent-light);
+    font-weight: bold;
+}
+
+@media (max-width: 700px) {
+    .footer-content {
+        flex-direction: column;
+        justify-content: center;
+        gap: 10px;
+    }
+}
